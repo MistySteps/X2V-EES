@@ -55,6 +55,28 @@ class Cv2xDataHandler:
                                 os.path.join(pTemp,f))
         return ret
     
+    def getRxTracesByApp(self,
+                          path:str,
+                          name:str,
+                          app:str):
+        pScene = os.path.join(path,name)
+        ret = {}
+        isRxLog = lambda x: x.split('_')[0] == 'rx'
+        whichRx = lambda x: x.split('_')[1]
+        whichTx = lambda x: x.split('_')[-2].split('.')[0]
+        whichApp = lambda x: x.split('_')[-1].split('.')[0]
+        for log in os.listdir(pScene):
+            if isRxLog(log) and app == whichApp(log):
+                if(whichRx(log) not in ret):
+                    ret[whichRx(log)] = {whichTx(log):[os.path.join(pScene,log)]}
+                else:
+                    if(whichTx(log) not in ret[whichRx(log)]):
+                        ret[whichRx(log)][whichTx(log)] = [os.path.join(pScene,log)]
+                    else:
+                        ret[whichRx(log)][whichTx(log)].append(
+                            os.path.join(pScene,log))
+        return ret
+    
     def getSCIByConfiguration(self,
                             path,
                             pck_len=None,
@@ -76,21 +98,21 @@ class Cv2xDataHandler:
     def getPacketSizeFromRxLog(self,data:pd.DataFrame)->int:
         return data['packet_length'].iloc[0]
     
-    def getRxAvg100msMetrics(self,data:pd.DataFrame)->list:
+    def getRxAvg100msMetrics(self,data:pd.DataFrame)->pd.DataFrame:
         data = data[data['extra']==1]
         data = data[['avg_throughput(100ms)','avg_packet_loss(100ms)']]
         data.dropna(inplace=True)
         data.reset_index(inplace=True,drop=True)
         return data
     
-    def getRxAvg10msMetrics(self,data:pd.DataFrame)->list:
+    def getRxAvg10msMetrics(self,data:pd.DataFrame)->pd.DataFrame:
         data = data[data['extra']==1]
         data = data[['avg_throughput(10ms)','avg_packet_loss(10ms)']]
         data.dropna(inplace=True)
         data.reset_index(inplace=True,drop=True)
         return data
     
-    def getRxLatencyMetrics(self,data:pd.DataFrame)->list:
+    def getRxLatencyMetrics(self,data:pd.DataFrame)->pd.DataFrame:
         data = data[data['extra']==0]
         data = data[['latency (ms)']]
         data.dropna(inplace=True)

@@ -79,10 +79,11 @@ def drawLineChart4ThroughputNLoss(throughput:dict,
                     marker='s',
                     label='Packet Loss Rate '+whichTx)
         axX.set_ylabel('Packet Loss Rate (%) ',fontdict=font)
+        axX.set_ylim(0,100)
         axX.tick_params(axis = 'both', labelsize = 20)
         
         lns_loss+=lns2
-    # ax.set_title(title, fontdict=font)
+    ax.set_title(title, fontdict=font)
     labs = [l.get_label() for l in lns_throughput+lns_loss]
     ax.legend(lns_throughput+lns_loss, labs, loc='upper left',fontsize=12)
         
