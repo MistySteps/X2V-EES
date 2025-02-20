@@ -48,10 +48,10 @@ The dataset is organized in the following structure:
 │   └── 3_tx
 │   └── 4_tx
 ├── indoor_special 
-│   ├── ipg
+│   ├── tx_interval
 │   ├── priority
-│   ├── scenarios
-│   └── throughput
+│   ├── scenario
+│   └── packet_size
 ├── outdoor_intersection
 │   ├── GNSS
 │   ├── intersection_1
